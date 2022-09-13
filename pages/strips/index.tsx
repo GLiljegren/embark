@@ -34,10 +34,9 @@ const StripList: NextPage<StripListProps> = observer(({stripStore}) => {
     }
 
     return <>
-        <h1>Strips</h1>
         <ThumbnailList strips={stripStore.strips} />
         {isLoadingImages ? <MoonLoader color="white"/> 
-        : <button onClick={getStrips} className="styled-button">Load more strips</button>}
+        : <button onClick={getStrips} className="styled-button">LOAD MORE STRIPS</button>}
     </>
 })
 

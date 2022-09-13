@@ -5,10 +5,10 @@ const StepButttons = (props: { currentId: number }) => {
     return (
         <div className="step-buttons">
             <Link  href={`/strips/${currentId - 1}`}>
-                <button className="styled-button">Previous</button>
+                <button className="styled-button">PREVIOUS</button>
             </Link>
             <Link className="card" href={`/strips/${currentId + 1}`}>
-                <button className="styled-button">Next</button>
+                <button className="styled-button">NEXT</button>
             </Link>
         </div>
     )
