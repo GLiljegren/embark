@@ -31,7 +31,7 @@ export default function Strip({strip}: InferGetStaticPropsType<GetStaticProps> )
 
 export const getStaticProps: GetStaticProps = async({ params }) => {
     
-    const request = await fetch(`https://xkcd.com/${params.id}/info.0.json`)
+    const request = await fetch(`https://xkcd.com/${params?.id}/info.0.json`)
     const data = await request.json()
 
     return {
@@ -45,7 +45,7 @@ export const getStaticPaths: GetStaticPaths = async() => {
     const data = await request.json()
     const totalNumberOfStrips = data.num
     const stripIndices = [...Array(totalNumberOfStrips).keys()]
-
+    stripIndices.splice(403)
     return {
         paths: stripIndices.map(stripIndex => `/strips/${stripIndex+1}`),
         fallback: false,
