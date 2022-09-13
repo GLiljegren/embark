@@ -1,10 +1,5 @@
 import { action, makeObservable, observable, computed } from "mobx"
-
-interface StripThumbnail {
-    id: number
-    img: string
-  }
- 
+import { StripThumbnail } from "../types/striptypes"
   
 class StripStoreImplementation {
     strips: StripThumbnail[] = []
@@ -25,8 +20,8 @@ class StripStoreImplementation {
         })
     }
 
-    removeStrip(id: number) {
-        this.strips = this.strips.filter((strip) => strip.id !== id)
+    removeStrip(num: number) {
+        this.strips = this.strips.filter((strip) => strip.num !== num)
     }
 
     get stripCount() {

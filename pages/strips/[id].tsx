@@ -3,8 +3,9 @@ import Image from "next/image"
 import { GetStaticPaths, GetStaticProps, GetServerSideProps, InferGetServerSidePropsType, InferGetStaticPropsType } from 'next'
 import { useState } from "react"
 import StepButtons from "../../components/StepButtons"
+
 export default function Strip({strip}: InferGetStaticPropsType<GetStaticProps> ) {
-    const [ratio, setRatio] = useState(16/9) // default to 16:9
+    const [ratio, setRatio] = useState(16/9)
 
     return <>
         <Head>
@@ -24,13 +25,10 @@ export default function Strip({strip}: InferGetStaticPropsType<GetStaticProps> )
             }/>
         </div>
         <StepButtons currentId={strip.num}/>
-
     </> 
-
 }
 
 export const getStaticProps: GetStaticProps = async({ params }) => {
-    
     const request = await fetch(`https://xkcd.com/${params?.id}/info.0.json`)
     const data = await request.json()
 
@@ -40,7 +38,6 @@ export const getStaticProps: GetStaticProps = async({ params }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async() => {
-
     const request = await fetch(`https://xkcd.com/info.0.json`)
     const data = await request.json()
     const totalNumberOfStrips = data.num

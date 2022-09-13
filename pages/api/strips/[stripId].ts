@@ -1,18 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { StripStore } from '../../../store/stripstore'
-
-interface StripThumbnail {
-  id: number
-  img: string
-}
+import { StripThumbnail } from "../../../types/striptypes"
 
 const fetchStrips = async (firstNumber: number, lastNumber: number) => {
   let result: StripThumbnail[] = []
-  for (let id = firstNumber; id < lastNumber; id++) {
+  for (let index = firstNumber; index < lastNumber; index++) {
       try {
-          const request = await fetch(`https://xkcd.com/${id}/info.0.json`)
+          const request = await fetch(`https://xkcd.com/${index}/info.0.json`)
           const data = await request.json()
-          result.push({id, img: data.img})
+          result.push({num: index, img: data.img})
       } catch (error) {
           console.error('Failed to fetch Comic strips', error)
       }
