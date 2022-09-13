@@ -1,0 +1,134 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.main {
+  min-height: 70vh;
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  width: 90%;
+  text-align: center;
+}
+
+.description {
+  margin: 1rem 0;
+  line-height: 0.75;
+  font-size: 0.75rem;
+}
+
+.step-buttons {
+  margin: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+}
+
+.footer {
+  display: flex;
+  flex: 1;
+  padding: 2rem 0;
+  border-top: 1px solid #eaeaea;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container {
+  height: 50%;
+  width: 50%;
+  margin: 0 auto;
+}
+
+
+.card-grid {
+  list-style-type: none;
+  padding-inline-end: 40px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.styled-button,
+.card {
+  text-align: left;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  max-width: 300px;
+  transition: all .2s ease-in-out;
+  float: left;
+  margin: 0.5rem;
+}
+
+.styled-button {
+  border: 1px solid white;
+  padding: 0.5rem;
+  text-align: center;
+  width: 100%;
+  background-color: black;
+}
+
+.step-buttons >.styled-button {
+  width: 45%;
+}
+
+.styled-button:hover,
+.styled-button:focus,
+.styled-button:active,
+.card:hover,
+.card:focus,
+.card:active {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    color: white;
+    background: black;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .image-container {
+    width: 95%;
+  }
+  .step-buttons {
+    width: 95%;
+  }
+  .styled-button {
+    width: 45%;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .image-container {
+    width: 30%;
+  }
+}
