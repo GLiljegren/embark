@@ -1,3 +1,4 @@
+import React from "react"
 import { StripThumbnail } from "../types/striptypes"
 import Thumbnail from "./Thumbnail"
 

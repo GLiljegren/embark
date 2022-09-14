@@ -1,3 +1,4 @@
+import React from "react"
 import { NextPage } from "next"
 import { StripStore } from '../../store/stripstore'
 import { observer } from 'mobx-react'
