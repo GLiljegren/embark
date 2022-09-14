@@ -1,5 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { StripThumbnail } from "../../../types/striptypes"
+import { parseNumber } from "../../../utils"
+
+const THUMBNAILS_PER_LOAD: number = 20
 
 const fetchStrips = async (firstNumber: number, lastNumber: number, sortByLatest: boolean) => {
   let result: StripThumbnail[] = []
@@ -34,17 +37,14 @@ export default async function handler(
   res: NextApiResponse<StripThumbnail[]>
 ) {
   const { stripId, sortByLatest } = req.query
-  const parsedId = stripId ? 
-    (typeof stripId === 'string') ? parseInt(stripId) 
-      : parseInt(stripId?.join())
-    : 0
+  const parsedId = parseNumber(stripId)
   const parsedSort = (sortByLatest === 'true') ? true : false
   let strips: StripThumbnail[]
   if(parsedSort) {
     const latestStripNumber = await fetchLatestStrip()
-    strips = await fetchStrips(latestStripNumber-parsedId, latestStripNumber-parsedId-20, parsedSort)
+    strips = await fetchStrips(latestStripNumber-parsedId, latestStripNumber-parsedId-THUMBNAILS_PER_LOAD, parsedSort)
   } else {
-    strips = await fetchStrips(parsedId+1, parsedId+20, parsedSort)
+    strips = await fetchStrips(parsedId+1, parsedId+1+THUMBNAILS_PER_LOAD, parsedSort)
   }
   res.status(200).json(strips)
 }

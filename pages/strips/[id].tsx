@@ -3,6 +3,8 @@ import Image from "next/image"
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { useState } from "react"
 import StepButtons from "../../components/StepButtons"
+import { parseNumber } from "../../utils" 
+
 
 export default function Strip({strip}: InferGetServerSidePropsType<GetServerSideProps> ) {
     const [ratio, setRatio] = useState(16/9)
@@ -32,10 +34,8 @@ export const getServerSideProps: GetServerSideProps = async({ params }) => {
     const maxNumRequest = await fetch(`https://xkcd.com/info.0.json`)
     const maxNumData = await maxNumRequest.json()
     const maxNum = maxNumData?.num
-    const currentNum = params?.id
-    const parsedNum = currentNum ? 
-    (typeof currentNum === 'string') ? parseInt(currentNum) 
-      : parseInt(currentNum?.join()) : 0
+    const parsedNum = parseNumber(params?.id)
+
     // Validate if id of visited url corresponds to a comic
     if(!parsedNum || parsedNum > maxNum || parsedNum < 1) {
         return {
@@ -43,7 +43,7 @@ export const getServerSideProps: GetServerSideProps = async({ params }) => {
           }
     }
 
-    const request = await fetch(`https://xkcd.com/${params?.id}/info.0.json`)
+    const request = await fetch(`https://xkcd.com/${parsedNum}/info.0.json`)
     const data = await request.json()
 
     return {

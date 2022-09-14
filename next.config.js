@@ -11,7 +11,8 @@ const nextConfig = {
     ]
   },
   images: {
-    domains: ['imgs.xkcd.com'],
+    domains: ['imgs.xkcd.com', 'cdn0.iconfinder.com'],
+    
   },
 }
 
