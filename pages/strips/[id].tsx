@@ -1,12 +1,11 @@
 import Head from "next/head"
 import Image from "next/image"
-import { GetStaticPaths, GetStaticProps, GetServerSideProps, InferGetServerSidePropsType, InferGetStaticPropsType } from 'next'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { useState } from "react"
 import StepButtons from "../../components/StepButtons"
 
-export default function Strip({strip}: InferGetStaticPropsType<GetStaticProps> ) {
+export default function Strip({strip}: InferGetServerSidePropsType<GetServerSideProps> ) {
     const [ratio, setRatio] = useState(16/9)
-
     return <>
         <Head>
             <title>{strip.safe_title}</title>
@@ -28,7 +27,22 @@ export default function Strip({strip}: InferGetStaticPropsType<GetStaticProps> )
     </> 
 }
 
-export const getStaticProps: GetStaticProps = async({ params }) => {
+export const getServerSideProps: GetServerSideProps = async({ params }) => {
+    // Fetch the latest strip
+    const maxNumRequest = await fetch(`https://xkcd.com/info.0.json`)
+    const maxNumData = await maxNumRequest.json()
+    const maxNum = maxNumData?.num
+    const currentNum = params?.id
+    const parsedNum = currentNum ? 
+    (typeof currentNum === 'string') ? parseInt(currentNum) 
+      : parseInt(currentNum?.join()) : 0
+    // Validate if id of visited url corresponds to a comic
+    if(!parsedNum || parsedNum > maxNum || parsedNum < 1) {
+        return {
+            notFound: true,
+          }
+    }
+
     const request = await fetch(`https://xkcd.com/${params?.id}/info.0.json`)
     const data = await request.json()
 
@@ -36,14 +50,3 @@ export const getStaticProps: GetStaticProps = async({ params }) => {
         props: { strip: data}
     }
 }
-
-export const getStaticPaths: GetStaticPaths = async() => {
-    const request = await fetch(`https://xkcd.com/info.0.json`)
-    const data = await request.json()
-    const totalNumberOfStrips = data.num
-    const stripIndices = [...Array(totalNumberOfStrips).keys()]
-    stripIndices.splice(403)
-    return {
-        paths: stripIndices.map(stripIndex => `/strips/${stripIndex+1}`),
-        fallback: false,
-      }}

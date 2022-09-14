@@ -10,11 +10,8 @@ interface StripListProps {
 }
 
 const StripList: NextPage<StripListProps> = observer(({stripStore}) => {
-    const [numberOfStrips, setNumberOfStrips] = useState(0)
     const [isLoadingImages, setIsLoadingImages] = useState(false)
-
     useEffect(() => {
-        setNumberOfStrips(stripStore.stripCount)
         if(stripStore.stripCount === 0) {
             try {
                 getStrips()
@@ -26,17 +23,28 @@ const StripList: NextPage<StripListProps> = observer(({stripStore}) => {
 
     const getStrips = async () => {
         setIsLoadingImages(true)
-        const req = await fetch(`/api/strips/${numberOfStrips+1}`)
+        const req = await fetch(`/api/strips/${stripStore.stripCount}?sortByLatest=${stripStore.sortByLatest}`)
         const result = await req.json()
         stripStore.addStrips(result)
-        setNumberOfStrips(stripStore.stripCount)
         setIsLoadingImages(false)
     }
 
+    const toggleSortByLatest = () => {
+        stripStore.toggleSorting()
+        stripStore.removeStrips()
+        getStrips()
+    }
+
     return <>
+        <h3>{stripStore.sortByLatest ? 'Latest Strips' : 'First Strips'}</h3>
+        {!isLoadingImages ? <button onClick={toggleSortByLatest} className="styled-button">TOGGLE LATEST / FIRST STRIPS</button>
+        : null }
         <ThumbnailList strips={stripStore.strips} />
         {isLoadingImages ? <MoonLoader color="white"/> 
-        : <button onClick={getStrips} className="styled-button">LOAD MORE STRIPS</button>}
+        : <>
+        <button onClick={getStrips} className="styled-button">LOAD MORE STRIPS</button>
+        </>
+        }
     </>
 })
 

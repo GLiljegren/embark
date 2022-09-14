@@ -1,10 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { StripStore } from '../../../store/stripstore'
 import { StripThumbnail } from "../../../types/striptypes"
 
-const fetchStrips = async (firstNumber: number, lastNumber: number) => {
+const fetchStrips = async (firstNumber: number, lastNumber: number, sortByLatest: boolean) => {
   let result: StripThumbnail[] = []
-  for (let index = firstNumber; index < lastNumber; index++) {
+  for (
+    let index = firstNumber; 
+    sortByLatest ? index > lastNumber : index < lastNumber; 
+    sortByLatest ? index-- : index++
+    ) {
       try {
           const request = await fetch(`https://xkcd.com/${index}/info.0.json`)
           const data = await request.json()
@@ -12,21 +15,36 @@ const fetchStrips = async (firstNumber: number, lastNumber: number) => {
       } catch (error) {
           console.error('Failed to fetch Comic strips', error)
       }
-
   }
   return result
+}
+
+const fetchLatestStrip = async () => {
+  try {
+      const request = await fetch(`https://xkcd.com/info.0.json`)
+      const data = await request.json()
+      return data.num
+  } catch (error) {
+      console.error('Failed to fetch latest comic strips', error)
+  }
 }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<StripThumbnail[]>
 ) {
-  const { stripId } = req.query
+  const { stripId, sortByLatest } = req.query
   const parsedId = stripId ? 
     (typeof stripId === 'string') ? parseInt(stripId) 
       : parseInt(stripId?.join())
     : 0
-  const strips = fetchStrips(parsedId, parsedId+20)
-  StripStore.addStrips(await strips)
-  res.status(200).json(await strips)
+  const parsedSort = (sortByLatest === 'true') ? true : false
+  let strips: StripThumbnail[]
+  if(parsedSort) {
+    const latestStripNumber = await fetchLatestStrip()
+    strips = await fetchStrips(latestStripNumber-parsedId, latestStripNumber-parsedId-20, parsedSort)
+  } else {
+    strips = await fetchStrips(parsedId+1, parsedId+20, parsedSort)
+  }
+  res.status(200).json(strips)
 }

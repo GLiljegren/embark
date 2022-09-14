@@ -61,6 +61,7 @@ a {
   border-top: 1px solid #eaeaea;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 
 .image-container {
@@ -146,6 +147,9 @@ a {
 
 @media only screen and (min-width: 1200px) {
   .image-container {
-    width: 30%;
+    width: 40%;
+  }
+  .styled-button {
+    width: 40%;
   }
 }
